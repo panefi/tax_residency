@@ -14,9 +14,9 @@ swagger = Swagger(app, template={
     }
 })
 
-# Register blueprints
-app.register_blueprint(users_blueprint, url_prefix='/users')
-app.register_blueprint(travel_blueprint, url_prefix='/travel')
+# Register blueprints with versioned URL prefix
+app.register_blueprint(users_blueprint, url_prefix='/api/v1/users')
+app.register_blueprint(travel_blueprint, url_prefix='/api/v1/travel')
 
 if __name__ == '__main__':
     app.run(debug=True)

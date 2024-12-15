@@ -1,5 +1,7 @@
-from flask import Blueprint, request
+from flask import Blueprint, request, jsonify
 from services.user_service import register_user, login_user, get_user_data
+from pydantic import ValidationError
+from models.users import UserRegistration, UserLogin
 
 users_blueprint = Blueprint('users', __name__)
 
@@ -38,7 +40,12 @@ def register():
       201:
         description: User registered successfully
     """
-    return register_user(request.json)
+    try:
+        # Validate and parse the request data
+        user_data = UserRegistration(**request.json)
+        return register_user(user_data.dict())
+    except ValidationError as e:
+        return jsonify(e.errors()), 400
 
 @users_blueprint.route('/login', methods=['POST'])
 def login():
@@ -64,7 +71,12 @@ def login():
       401:
         description: Invalid username or password
     """
-    return login_user(request.json)
+    try:
+        # Validate and parse the request data
+        login_data = UserLogin(**request.json)
+        return login_user(login_data.dict())
+    except ValidationError as e:
+        return jsonify(e.errors()), 400
 
 @users_blueprint.route('/user_data', methods=['GET'])
 def user_data():
