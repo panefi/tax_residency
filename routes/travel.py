@@ -1,27 +1,25 @@
-from fastapi import APIRouter, HTTPException, Request
+from fastapi import APIRouter, Depends, HTTPException
 from services.travel_service import get_travel_data, add_travel_entry
+from services.middleware import jwt_middleware
 
 travel_router = APIRouter()
 
-@travel_router.get('/data', response_model=dict, status_code=200)
-async def travel_data(user_id: str):
+@travel_router.get('/my_travels', response_model=dict, status_code=200)
+async def read_travel_data(current_user_id: str = Depends(jwt_middleware)):
     """
-    Get travel data
+    Get current user's travel data
     """
     try:
-        return get_travel_data(user_id)
+        return get_travel_data(current_user_id)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-@travel_router.post('/entry', response_model=dict, status_code=201)
-async def travel_entry(request: Request):
+@travel_router.post('/add_travel', response_model=dict, status_code=201)
+async def create_travel_entry(entry: dict, current_user_id: str = Depends(jwt_middleware)):
     """
-    Add a travel entry
+    Add a new travel entry for the current user
     """
-    data = await request.json()
-    user_id = data['user_id']
-    entry = data['entry']
     try:
-        return add_travel_entry(user_id, entry)
+        return add_travel_entry(current_user_id, entry)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e)) 
