@@ -1,22 +1,13 @@
-from flask import Flask
-from flasgger import Swagger
-from routes.users import users_blueprint
-from routes.travel import travel_blueprint
+import uvicorn
+from fastapi import FastAPI
+from routes.users import users_router
+from routes.travel import travel_router
 
-app = Flask(__name__)
+app = FastAPI()
 
-# Initialize Swagger with custom configuration
-swagger = Swagger(app, template={
-    "info": {
-        "title": "Tax Residency Application",
-        "version": "1.0",
-        "description": "API documentation for the Tax Residency Application"
-    }
-})
-
-# Register blueprints with versioned URL prefix
-app.register_blueprint(users_blueprint, url_prefix='/api/v1/users')
-app.register_blueprint(travel_blueprint, url_prefix='/api/v1/travel')
+# Register routers with versioned URL prefix
+app.include_router(users_router, prefix='/api/v1/users')
+app.include_router(travel_router, prefix='/api/v1/travel')
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    uvicorn.run(app, host='0.0.0.0', port=8000, debug=True)

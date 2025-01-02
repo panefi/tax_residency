@@ -1,6 +1,5 @@
 from werkzeug.security import generate_password_hash, check_password_hash
 from database import get_db
-from flask import jsonify
 
 
 def register_user(data):    
@@ -14,8 +13,7 @@ def register_user(data):
         'password': hashed_password,
         'full_name': data['full_name']
     })
-    
-    return jsonify({'message': 'User registered successfully'}), 201
+    return {"result": "User registered successfully"}
 
 
 def login_user(data):    
@@ -23,13 +21,19 @@ def login_user(data):
     user = db.users.find_one({'username': data['username']})
     
     if user and check_password_hash(user['password'], data['password']):
-        return jsonify({'message': 'Login successful'}), 200
+        return {"result": "Login successful"}
     else:
-        return jsonify({'message': 'Invalid username or password'}), 401
+        return {"result": "Invalid username or password"}
 
 
 def get_user_data(username):
     db = get_db()
-    user_data = list(db.travel_data.find({'user_id': username}, {'_id': 0}))
+    user_data = list(db.users.find({'username': username}, {'_id': 0, 'password': 0}))
     
-    return jsonify(user_data) 
+    return {"result": user_data}
+
+
+def add_user(data):
+    db = get_db()
+    db.users.insert_one(data)
+    return {"result": "User added successfully"}
