@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException
-from services.user_service import get_user_data, add_user
+from services.user_service import get_user_data, register_user
 
 users_router = APIRouter()
 
@@ -13,12 +13,12 @@ async def read_users(username: str):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-@users_router.post('/', response_model=dict, status_code=201)
+@users_router.post('/register', response_model=dict, status_code=201)
 async def create_user(user_data: dict):
     """
-    Add a new user
+    Register a new user
     """
     try:
-        return add_user(user_data)
+        return register_user(user_data)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

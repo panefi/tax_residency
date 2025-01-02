@@ -1,19 +1,28 @@
 from werkzeug.security import generate_password_hash, check_password_hash
 from database import get_db
+from pymongo.errors import DuplicateKeyError
 
 
-def register_user(data):    
-    # Hash the password
+def register_user(data):
+    db = get_db()
+    
+    # Check for duplicate username
+    existing_user = db.users.find_one({'username': data['username']})
+    if existing_user:
+        return {"error": "Username already exists"}
+    
     hashed_password = generate_password_hash(data['password'])
     
-    # Store the user in the database
-    db = get_db()
-    db.users.insert_one({
-        'username': data['username'],
-        'password': hashed_password,
-        'full_name': data['full_name']
-    })
-    return {"result": "User registered successfully"}
+    try:
+        db.users.insert_one({
+            'username': data['username'],
+            'password': hashed_password,
+            'full_name': data['full_name']
+        })
+        return {"result": "User registered successfully"}
+    
+    except DuplicateKeyError:
+        return {"error": "Username already exists"}
 
 
 def login_user(data):    
@@ -31,9 +40,3 @@ def get_user_data(username):
     user_data = list(db.users.find({'username': username}, {'_id': 0, 'password': 0}))
     
     return {"result": user_data}
-
-
-def add_user(data):
-    db = get_db()
-    db.users.insert_one(data)
-    return {"result": "User added successfully"}
