@@ -1,5 +1,8 @@
-flask
+fastapi
+uvicorn
 pymongo
 python-dotenv
 flasgger
 pydantic
+certifi
+PyJWT
