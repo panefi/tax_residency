@@ -37,7 +37,7 @@ def login_user(data):
         token = jwt.encode({'user_id': user_id}, SECRET_KEY, algorithm='HS256')
         return {"token": token}
     else:
-        return {"result": "Invalid username or password"}
+        raise Exception("Invalid username or password")
 
 def get_user_data(username):
     db = get_db()

@@ -32,4 +32,4 @@ async def login(user_data: dict):
     try:
         return login_user(user_data)
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=401, detail=str(e))
