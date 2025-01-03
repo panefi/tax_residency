@@ -10,4 +10,4 @@ app.include_router(users_router, prefix='/api/v1/users')
 app.include_router(travel_router, prefix='/api/v1/travel')
 
 if __name__ == '__main__':
-    uvicorn.run(app, host='0.0.0.0', port=8000, debug=True)
+    uvicorn.run(app, host='0.0.0.0', port=8000)
