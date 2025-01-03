@@ -5,7 +5,7 @@ from fastapi.responses import JSONResponse
 
 def get_travel_data(user_id: str):
     db = get_db()
-    travel_data = list(db.travel_data.find({'user_id': user_id}, {'_id': 0}))
+    travel_data = list(db.travel_data.find({'user_id': user_id}, {'_id': 0, 'user_id': 0}))
     return JSONResponse(content={"result": travel_data}, status_code=200)
 
 
