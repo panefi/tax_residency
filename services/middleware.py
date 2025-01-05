@@ -1,4 +1,3 @@
-from flask import request, jsonify, g
 import jwt
 import os
 from dotenv import load_dotenv
@@ -10,6 +9,7 @@ load_dotenv()
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 security = HTTPBearer()
+
 
 async def jwt_middleware(credentials: HTTPAuthorizationCredentials = Security(security)):
     token = credentials.credentials
@@ -23,11 +23,3 @@ async def jwt_middleware(credentials: HTTPAuthorizationCredentials = Security(se
         raise HTTPException(status_code=401, detail="Token has expired")
     except jwt.InvalidTokenError:
         raise HTTPException(status_code=401, detail="Invalid token")
-
-def validate_token(token: str) -> bool:
-    # Implement your token validation logic
-    return True
-
-def get_user_id_from_token(token: str) -> str:
-    # Extract and return the user_id from the token
-    return "user_id"

@@ -6,3 +6,5 @@ flasgger
 pydantic
 certifi
 PyJWT
+pytest
+pytest-cov

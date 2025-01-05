@@ -4,6 +4,7 @@ from services.middleware import jwt_middleware
 
 users_router = APIRouter()
 
+
 @users_router.get('/me', response_model=dict, status_code=200)
 async def read_user_data(current_user_id: str = Depends(jwt_middleware)):
     """
@@ -14,6 +15,7 @@ async def read_user_data(current_user_id: str = Depends(jwt_middleware)):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+
 @users_router.post('/register', response_model=dict, status_code=201)
 async def create_user(user_data: dict):
     """
@@ -23,6 +25,7 @@ async def create_user(user_data: dict):
         return register_user(user_data)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
 
 @users_router.post('/login', response_model=dict, status_code=200)
 async def login(user_data: dict):
