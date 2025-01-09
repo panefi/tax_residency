@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from services.travel_service import get_travel_data, add_travel_entry
 from services.middleware import jwt_middleware
+from models.travel import TravelEntry
 
 travel_router = APIRouter()
 
@@ -17,7 +18,7 @@ async def read_travel_data(current_user_id: str = Depends(jwt_middleware)):
 
 
 @travel_router.post('/add_travel', response_model=dict, status_code=201)
-async def create_travel_entry(entry: dict,
+async def create_travel_entry(entry: TravelEntry,
                               current_user_id: str = Depends(jwt_middleware)):
     """
     Add a new travel entry for the current user

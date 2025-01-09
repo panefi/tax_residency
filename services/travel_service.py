@@ -14,7 +14,7 @@ def add_travel_entry(user_id: str, entry: dict):
     db = get_db()
     db.travel_data.insert_one({
         'user_id': user_id,
-        **entry
+        **entry.model_dump()
     })
     return JSONResponse(content={'message': 'Travel entry added successfully'},
                         status_code=201
