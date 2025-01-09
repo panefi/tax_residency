@@ -11,7 +11,9 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 security = HTTPBearer()
 
 
-async def jwt_middleware(credentials: HTTPAuthorizationCredentials = Security(security)):
+async def jwt_middleware(
+    credentials: HTTPAuthorizationCredentials = Security(security)
+):
     token = credentials.credentials
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=['HS256'])
