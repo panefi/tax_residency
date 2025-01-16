@@ -12,7 +12,7 @@ def register_user(data):
     db = get_db()
     existing_user = db.users.find_one({'username': data['username']})
     if existing_user:
-        return {"error": "Username already exists"}
+        return {"result": "Username already exists"}
 
     hashed_password = generate_password_hash(data['password'])
 
