@@ -4,6 +4,7 @@ from pymongo.errors import DuplicateKeyError
 import jwt
 import os
 import datetime
+from bson.objectid import ObjectId
 
 SECRET_KEY = os.getenv('SECRET_KEY')
 
@@ -43,15 +44,15 @@ def login_user(data):
         raise Exception("Invalid username or password")
 
 
-def get_user_data(username):
+def get_user_data(user_id: str):
     db = get_db()
-    user_data = list(db.users.find({'username': username},
+    user_data = list(db.users.find({'_id': ObjectId(user_id)},
                                    {'_id': 0, 'password': 0}))
 
     return {"result": user_data}
 
 
-def verify_token(token):
+def verify_token(token: str):
     try:
         decoded = jwt.decode(token, SECRET_KEY, algorithms=['HS256'])
         return decoded
@@ -59,3 +60,9 @@ def verify_token(token):
         return {"error": "Token has expired"}
     except jwt.InvalidTokenError:
         return {"error": "Invalid token"}
+
+
+def update_user_profile(user_id, profile_data):
+    db = get_db()
+    db.users.update_one({'_id': ObjectId(user_id)}, {'$set': profile_data.model_dump()})
+    return {"result": "Profile updated successfully"}

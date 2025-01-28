@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
-from services.user_service import get_user_data, register_user, login_user
+from services.user_service import get_user_data, register_user, login_user, update_user_profile
 from services.middleware import jwt_middleware
-
+from models.users import UserProfileUpdate
 users_router = APIRouter()
 
 
@@ -36,3 +36,14 @@ async def login(user_data: dict):
         return login_user(user_data)
     except Exception as e:
         raise HTTPException(status_code=401, detail=str(e))
+
+
+@users_router.put('/update-profile', response_model=dict, status_code=201)
+async def update_profile(profile_data: UserProfileUpdate, current_user_id: str = Depends(jwt_middleware)):
+    """
+    Update user profile
+    """
+    try:
+        return update_user_profile(current_user_id, profile_data)
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
