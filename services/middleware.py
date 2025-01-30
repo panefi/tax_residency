@@ -15,7 +15,6 @@ async def jwt_middleware(
     credentials: HTTPAuthorizationCredentials = Security(security)
 ):
     token = credentials.credentials
-    print(token)
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=['HS256'])
         user_id = payload.get('user_id')

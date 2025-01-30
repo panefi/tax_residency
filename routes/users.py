@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from services.user_service import get_user_data, register_user, login_user, update_user_profile
 from services.middleware import jwt_middleware
 from models.users import UserProfileUpdate
+
 users_router = APIRouter()
 
 

@@ -5,6 +5,7 @@ import jwt
 import os
 import datetime
 from bson.objectid import ObjectId
+from datetime import timedelta
 
 SECRET_KEY = os.getenv('SECRET_KEY')
 
@@ -24,8 +25,11 @@ def register_user(data):
             'full_name': data['full_name']
         })
         user_id = str(result.inserted_id)
-        return {"result": "User registered successfully", "user_id": user_id}
+        expiration = datetime.datetime.now(datetime.UTC) + datetime.timedelta(hours=1)
+        token = jwt.encode({'user_id': user_id, 'exp': expiration},
+                           SECRET_KEY, algorithm='HS256')
 
+        return {"result": "User registered successfully", "token": token}
     except DuplicateKeyError:
         return {"error": "Username already exists"}
 
